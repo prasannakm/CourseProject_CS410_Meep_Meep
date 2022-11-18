@@ -6,7 +6,6 @@ s = 0
 
 # iterate through local file directory to retrieve the required columns for merging
 for city in cities:
-    print(city)
     listings = pd.read_csv(f'{city}/listings.csv')
     listings = listings.loc[:, ['id',
                          'name',
@@ -32,17 +31,35 @@ for city in cities:
                     'review_scores_value',
                     'comments']]
     
-    # take the top 10 of each listing from the dataset
-    df = df.groupby('id').head(10)
+    # remove non-ASCII characters
+    u = df.select_dtypes(object)
+    df[u.columns] = u.apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
     
-    # for 10 random samples
-    # df = df.groupby('id').sample(10, replace=True)
+    # remove html tags from the comments
+    df['comments'] = df['comments'].str.replace(r'<[^<>]*>', '', regex=True)
     
+    # take 10 random samples for each listing and drop any rows with duplicate comments
+    #try:
+    df = df.groupby('id').sample(10, replace=True).drop_duplicates(['comments'])
+    #except ValueError:
+    #    continue
+        
     # rename host_location to location & from identified list variables, change the value to city, state
-     df = df.rename(columns={'host_location':'location'})
+    df = df.rename(columns={'host_location':'location'})
     df['location'] = f'{city}, {state[s]}'
     s += 1
     
     # identify output directory and print to it
     filedir = f'{city}/{city}_Final_10.csv'
-    df2 = df.to_csv(filedir, sep=',')
+    df2 = df.to_csv(filedir, sep=',', index=False)
+    
+
+# merging the files
+df_main = pd.DataFrame()
+
+for city in cities:
+    df3 = pd.read_csv(f'{city}/{city}_Final_10.csv', index_col=None)
+    df_main = df_main.append(df3)
+
+# print final dataset
+df4 = df_main.to_csv('Data_Final_10.csv', sep=',', index=False)
