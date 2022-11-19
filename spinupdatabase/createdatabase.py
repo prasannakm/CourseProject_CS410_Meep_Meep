@@ -6,7 +6,7 @@ db_conn = sqlite3.connect("airbnblisting.db")
 c = db_conn.cursor()
 
 c.execute(
-    """CREATE TABLE sales (
+    """CREATE TABLE listing (
         id INTEGER,
         listing_id INTEGER, 
         listing_name TEXT,
