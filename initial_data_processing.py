@@ -40,7 +40,8 @@ for city in cities:
     df['comments'] = df['comments'].str.replace(r'<[^<>]*>', '', regex=True)
     
     # take 10 random samples for each listing and drop any rows with duplicate comments
-    df = df.groupby('id').sample(10, replace=True).drop_duplicates(['comments'])
+    df = df.drop_duplicates(['comments'])
+    df = df.groupby('id').sample(10, replace=True)
         
     # rename host_location to location & from identified list variables, change the value to city, state
     df = df.rename(columns={'host_location':'location'})
