@@ -33,6 +33,10 @@ for city in cities:
                     'review_scores_value',
                     'comments']]
     
+    # rename host_location to location & from identified list variables, change the value to city, state
+    df = df.rename(columns={'host_location':'location'})
+    df['location'] = f'{city}, {state[s]}'
+    
     # remove non-ASCII characters
     u = df.select_dtypes(object)
     df[u.columns] = u.apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
@@ -48,10 +52,6 @@ for city in cities:
     
     # take 10 random samples for each listing
     df = df.groupby('id').sample(10, replace=True)
-        
-    # rename host_location to location & from identified list variables, change the value to city, state
-    df = df.rename(columns={'host_location':'location'})
-    df['location'] = f'{city}, {state[s]}'
     
     # merging files
     df_main = df_main.append(df)
