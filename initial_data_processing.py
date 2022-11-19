@@ -3,6 +3,7 @@ import pandas as pd
 cities = ['Los Angeles', 'San Francisco', 'Chicago', 'Nashville', 'Boston', 'New Orleans', 'Austin', 'Denver']
 state = ['CA', 'CA', 'IL', 'TN', 'MA', 'LA', 'TX', 'CO']
 s = 0
+df_main = pd.DataFrame()
 
 # iterate through local file directory to retrieve the required columns for merging
 for city in cities:
@@ -44,19 +45,12 @@ for city in cities:
     # rename host_location to location & from identified list variables, change the value to city, state
     df = df.rename(columns={'host_location':'location'})
     df['location'] = f'{city}, {state[s]}'
+    
+    # merging the files
+    df_main = df_main.append(df)
+    
+    # increase s to iterate through given city, state lists
     s += 1
     
-    # identify output directory and print to it
-    filedir = f'{city}/{city}_Final_10.csv'
-    df2 = df.to_csv(filedir, sep=',', index=False)
-    
-
-# merging the files
-df_main = pd.DataFrame()
-
-for city in cities:
-    df3 = pd.read_csv(f'{city}/{city}_Final_10.csv', index_col=None)
-    df_main = df_main.append(df3)
-
 # print final dataset
-df4 = df_main.to_csv('Data_Final_10.csv', sep=',', index=False)
+df1 = df_main.to_csv('Data_Final_10.csv', sep=',', index=False)
