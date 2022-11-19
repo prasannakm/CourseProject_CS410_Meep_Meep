@@ -43,6 +43,9 @@ for city in cities:
     # drop any rows with duplicate comments
     df = df.drop_duplicates(['comments'])
     
+    # drop rows that are missing values
+    df = df.dropna()
+    
     # take 10 random samples for each listing
     df = df.groupby('id').sample(10, replace=True)
         
