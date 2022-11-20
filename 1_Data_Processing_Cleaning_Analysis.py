@@ -105,9 +105,6 @@ for city in cities:
     # increment s to iterate through given city/state lists
     s += 1
     
-# print final dataset
-#df1 = df_main.to_csv('Dataset_Final.csv', sep=',', index=False)
-
 # Vader Sentiment Analysis
 # making additional columns for sentiment score in the vader dataframe
 sentiment = vad()
@@ -148,3 +145,7 @@ plt.figure(figsize=(30,8))
 sns.barplot(data=time_df, x='review_scores', y='comments', hue='Vad_Overall_Sentiment')
 plt.show()
 '''
+
+
+# print final dataset
+#df1 = df_main.to_csv('Dataset_Final.csv', sep=',', index=False)
