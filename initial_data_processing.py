@@ -44,6 +44,12 @@ for city in cities:
     # remove html tags from the comments
     df['comments'] = df['comments'].str.replace(r'<[^<>]*>', '', regex=True)
     
+    # remove punctuation
+    df['comments'] = df['comments'].str.replace(r'[^\w\s]+', '', regex=True)
+    
+    # remove whitespace
+    df['comments'] = df['comments'].str.strip()
+                                                    
     # drop any rows with duplicate comments
     df = df.drop_duplicates(['comments'])
     
