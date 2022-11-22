@@ -81,7 +81,13 @@ for city in cities:
     df = df.dropna()
     
     # take 10 random samples for each listing
-    df = df.groupby('id').sample(10, replace=True)
+    #df = df.groupby('id').sample(10, replace=True)
+    
+    # query review_scores column for <= 3.0 and > 3.0, then groupby the id column
+    # take 10 samples from <= 3.0 and 5 samples from > 3.0
+    df_tail = df.query('review_scores <= 3.0').groupby('id').sample(10, replace=True)
+    df = df.query('review_scores > 3.0').groupby('id').sample(5, replace=True)
+    df = df.append(df_tail)
     
     # drop any rows with duplicate comments
     df = df.drop_duplicates(['comments'])
